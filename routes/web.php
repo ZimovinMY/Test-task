@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'MainController@main');
+Route::get('/StudentCreation', 'MainController@StudentCreation');
+Route::post('/StudentCreation/check', 'MainController@StudentCreation_check');
+Route::get('/SubjectCreation', 'MainController@SubjectCreation');
+Route::post('/SubjectCreation/check', 'MainController@SubjectCreation_check');
+Route::get('/BindingStudent', 'MainController@BindingStudent');
+Route::post('/BindingStudent/check', 'MainController@BindingStudent_check');
+Route::get('/ShowStudents', 'MainController@ShowStudents');
+Route::post('/ShowStudents/check', 'MainController@ShowStudents_check');
+Route::get('/GradingStudent', 'MainController@GradingStudent');
+Route::post('/GradingStudent/check', 'MainController@GradingStudent_check');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
