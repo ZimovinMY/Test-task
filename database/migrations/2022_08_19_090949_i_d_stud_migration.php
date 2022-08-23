@@ -13,9 +13,18 @@ class IDStudMigration extends Migration
      */
     public function up()
     {
-        Schema::create('stud', function (Blueprint $table) {
+        Schema::create('i_d_stud_models', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+        });
+        Schema::create('i_d_subjects', function (Blueprint $table) {
+            $table->id();
+            $table->string('subject');
+        });
+        Schema::create('stud_grades', function (Blueprint $table) {
+            $table->integer('id_student');
+            $table->integer('id_subject');
+            $table->integer('grade')->nullable();
         });
     }
 
@@ -26,6 +35,8 @@ class IDStudMigration extends Migration
      */
     public function down()
     {
-        Schema::dropifExists('stud');
+        Schema::dropifExists('i_d_stud_models');
+        Schema::dropifExists('i_d_subjects');
+        Schema::dropifExists('stud_grades');
     }
 }

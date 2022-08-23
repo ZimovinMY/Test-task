@@ -15,6 +15,24 @@
         </div>
     @endif
 
+    @if($no_exist_student)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данный студент не найден!</h5>
+        </div>
+    @endif
+
+    @if($no_exist_subject)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данная дисциплина не найдена!</h5>
+        </div>
+    @endif
+
+    @if($no_conn_grade)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Студент не изучает данную дисциплину!</h5>
+        </div>
+    @endif
+
     <form method="post" action="/GradingStudent/check">
         @csrf
         <input style="width: 400px; padding-left: 10px;" type="text" name="student" id="student" placeholder="Введите ФИО студента" class="form-control"><br>

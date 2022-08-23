@@ -15,6 +15,12 @@
         </div>
     @endif
 
+    @if($exist_student_creation)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данная запись уже существует!</h5>
+        </div>
+    @endif
+
     <form method="post" action="/StudentCreation/check">
         @csrf
         <input style="width: 400px; padding-left: 10px;" type="text" name="student" id="student" placeholder="Введите ФИО студента" class="form-control"><br>

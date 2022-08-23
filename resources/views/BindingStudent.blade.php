@@ -15,6 +15,24 @@
         </div>
     @endif
 
+    @if($no_stud_binding)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данный студент не найден!</h5>
+        </div>
+    @endif
+
+    @if($no_subj_binding)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данная дисциплина не найдена!</h5>
+        </div>
+    @endif
+
+    @if($exist_binding)
+        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
+            <h5>Данная запись уже существует!</h5>
+        </div>
+    @endif
+
     <form method="post" action="/BindingStudent/check">
         @csrf
         <input style="width: 400px; padding-left: 10px;" type="text" name="subject" id="subject" placeholder="Введите название дисциплины" class="form-control"><br>
