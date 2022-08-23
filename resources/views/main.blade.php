@@ -12,6 +12,8 @@
             <li style="margin-left: 15px" class="nav-item mb-2"><a href="/BindingStudent" class="nav-link p-0 text-dark"><b>Привязка студента к дисциплине</b></a></li>
             <li style="margin-left: 15px" class="nav-item mb-2"><a href="/ShowStudents" class="nav-link p-0 text-dark"><b>Отображение студентов, изучающих дисциплину</b></a></li>
             <li style="margin-left: 15px" class="nav-item mb-2"><a href="/GradingStudent" class="nav-link p-0 text-dark"><b>Проставление оценки студенту за дисциплину</b></a></li>
+            <li style="margin-left: 15px" class="nav-item mb-2"><a href="/DeleteStudent" class="nav-link p-0 text-dark"><b>Удаление студента</b></a></li>
+            <li style="margin-left: 15px" class="nav-item mb-2"><a href="/DeleteSubject" class="nav-link p-0 text-dark"><b>Удаление дисциплины</b></a></li>
         </ul>
         </div>
     </div>

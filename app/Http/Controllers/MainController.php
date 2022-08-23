@@ -145,4 +145,50 @@ class MainController extends Controller
             return view('main');
         }
     }
+
+    public function DeleteStudent() {
+        return view('DeleteStudent',['no_exist_student_delete' => false]);
+    }
+
+    public function DeleteStudent_check(Request $del_req_stud)
+    {
+        $valid = $del_req_stud->validate([
+            'student' => 'required|min:4|max:50'
+        ]);
+
+        $del_stud = $del_req_stud-> input('student');
+
+        $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
+        if ($value === null) {
+            return view('DeleteStudent', ['no_exist_student_delete' => true]);
+        }
+        else{
+            DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
+            DB::table('stud_grades')->where('id_student', '=', $value)->delete();
+            return view('main');
+        }
+    }
+
+    public function DeleteSubject() {
+        return view('DeleteSubject',['no_exist_subject_delete' => false]);
+    }
+
+    public function DeleteSubject_check(Request $del_req_subj)
+    {
+        $valid = $del_req_subj->validate([
+            'subject' => 'required|min:4|max:50'
+        ]);
+
+        $del_subj = $del_req_subj-> input('subject');
+
+        $value = DB::table('i_d_subjects')->where('subject', $del_subj)->value('id');
+        if ($value === null) {
+            return view('DeleteSubject', ['no_exist_subject_delete' => true]);
+        }
+        else{
+            DB::table('i_d_subjects')->where('subject', '=', $del_subj)->delete();
+            DB::table('stud_grades')->where('id_subject', '=', $value)->delete();
+            return view('main');
+        }
+    }
 }

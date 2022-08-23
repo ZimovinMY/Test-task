@@ -25,6 +25,11 @@ Route::post('/ShowStudents/check', 'MainController@ShowStudents_check');
 Route::get('/GradingStudent', 'MainController@GradingStudent');
 Route::post('/GradingStudent/check', 'MainController@GradingStudent_check');
 
+Route::get('/DeleteStudent', 'MainController@DeleteStudent');
+Route::post('/DeleteStudent/check', 'MainController@DeleteStudent_check');
+Route::get('/DeleteSubject', 'MainController@DeleteSubject');
+Route::post('/DeleteSubject/check', 'MainController@DeleteSubject_check');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
