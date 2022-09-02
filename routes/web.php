@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'MainController@main');
 Route::get('/StudentCreation', 'MainController@StudentCreation');
 Route::post('/StudentCreation/check', 'MainController@StudentCreation_check');
+///
+Route::post('/SendCreationFIO', 'MainController@SendCreationFIO', 'SendCreationFIO');
+///
 Route::get('/SubjectCreation', 'MainController@SubjectCreation');
 Route::post('/SubjectCreation/check', 'MainController@SubjectCreation_check');
 Route::get('/BindingStudent', 'MainController@BindingStudent');

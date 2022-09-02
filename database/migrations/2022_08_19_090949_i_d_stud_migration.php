@@ -16,6 +16,7 @@ class IDStudMigration extends Migration
         Schema::create('i_d_stud_models', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('year');
         });
         Schema::create('i_d_subjects', function (Blueprint $table) {
             $table->id();

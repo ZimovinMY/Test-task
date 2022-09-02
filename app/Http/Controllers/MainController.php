@@ -20,14 +20,16 @@ class MainController extends Controller
     public function StudentCreation_check(Request $stud_request)
     {
         $valid = $stud_request->validate([
-            'student' => 'required|min:4|max:50'
+            'student' => 'required|min:4|max:50',
+            'year' => 'required|min:4|max:10'
         ]);
 
         $new_student = $stud_request-> input('student');
+        $new_year = $stud_request-> input('year');
 
         $value = DB::table('i_d_stud_models')->where('name', $new_student)->count();
         if ($value === 0) {
-            DB::table('i_d_stud_models')->insert(['name'=>$new_student]);
+            DB::table('i_d_stud_models')->insert(['name'=>$new_student,'year'=>$new_year]);
             return view('main');
         }
         else{
@@ -191,4 +193,22 @@ class MainController extends Controller
             return view('main');
         }
     }
+
+    ///////vue
+
+    public function SendCreationFIO(request $request)
+    {
+        $new_student = $request-> input('FIO');
+        $new_year = $request-> input('year');
+
+        $value = DB::table('i_d_stud_models')->where('name', $new_student)->count();
+        if ($value === 0) {
+            DB::table('i_d_stud_models')->insert(['name'=>$new_student,'year'=>$new_year]);
+            return view('main');
+        }
+        else{
+            return view('StudentCreation', ['exist_student_creation' => true]);
+        }
+    }
+
 }
