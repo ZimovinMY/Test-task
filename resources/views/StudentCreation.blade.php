@@ -34,6 +34,12 @@
                 <v-form v-model="valid">
                 <v-row>
                     <v-col sm="4">
+                        <v-alert
+                            :value="exist_student"
+                            color="red"
+                            type="error">
+                            Данная запись уже существует!
+                        </v-alert>
                         <v-text-field
                             solo
                             label="Введите ФИО студента"
@@ -73,6 +79,7 @@
                 return{
                     FIO:'',
                     year:'',
+                    exist_student: false,
                     valid: false,
                     FIO_rules: [
                         v => !!v || 'ФИО не должно быть пустым',
@@ -95,6 +102,18 @@
                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                         body: data
                     })
+
+                        .then((response)=>{
+                            return response.json()
+                        })
+                            .then((data)=>{
+                                if(data){
+                                    window.location.replace("/")
+                                }
+                                if(!data){
+                                    this.exist_student = true
+                                }
+                            })
                 },
             }
         })

@@ -25,11 +25,17 @@ Route::get('/BindingStudent', 'MainController@BindingStudent');
 Route::post('/BindingStudent/check', 'MainController@BindingStudent_check');
 Route::get('/ShowStudents', 'MainController@ShowStudents');
 Route::post('/ShowStudents/check', 'MainController@ShowStudents_check');
+///
+Route::post('/ShowTable', 'MainController@ShowTable','ShowTable');
+///
 Route::get('/GradingStudent', 'MainController@GradingStudent');
 Route::post('/GradingStudent/check', 'MainController@GradingStudent_check');
 
 Route::get('/DeleteStudent', 'MainController@DeleteStudent');
 Route::post('/DeleteStudent/check', 'MainController@DeleteStudent_check');
+///
+Route::post('/SendDeleteFIO', 'MainController@SendDeleteFIO', 'SendDeleteFIO');
+///
 Route::get('/DeleteSubject', 'MainController@DeleteSubject');
 Route::post('/DeleteSubject/check', 'MainController@DeleteSubject_check');
 

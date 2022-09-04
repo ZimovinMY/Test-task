@@ -204,11 +204,68 @@ class MainController extends Controller
         $value = DB::table('i_d_stud_models')->where('name', $new_student)->count();
         if ($value === 0) {
             DB::table('i_d_stud_models')->insert(['name'=>$new_student,'year'=>$new_year]);
-            return view('main');
+            $answer = 1;
+            return json_encode($answer);
         }
         else{
-            return view('StudentCreation', ['exist_student_creation' => true]);
+            $answer = 0;
+            return json_encode($answer);
         }
     }
 
+    public function SendDeleteFIO(Request $del_req_stud)
+    {
+        $del_stud = $del_req_stud-> input('FIO');
+
+        $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
+        if ($value === null) {
+            $answer = 0;
+            return json_encode($answer);
+        }
+        else{
+            DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
+            DB::table('stud_grades')->where('id_student', '=', $value)->delete();
+            $answer = 1;
+            return json_encode($answer);
+        }
+    }
+
+    public function ShowTable(Request $show_request) {
+
+        $show_subj = $show_request->input('subject');
+
+        $id_subj = DB::table('i_d_subjects')->where('subject', $show_subj)->value('id');
+        if ($id_subj === null) {
+            $stud = null;
+            $answer = 1;
+            return json_encode([$stud,$answer]);
+        }
+        $id_stud_count = DB::table('stud_grades')->where('id_subject', $id_subj)->count();
+        if ($id_stud_count === 0) {
+            $stud = null;
+            $answer = 2;
+            return json_encode([$stud,$answer]);
+        }
+        $selection = DB::select('SELECT
+            i_d_stud_models.name,
+            stud_grades.grade,
+            i_d_subjects.subject
+        FROM i_d_stud_models
+        JOIN stud_grades
+        ON i_d_stud_models.id = stud_grades.id_student
+        JOIN i_d_subjects
+        ON i_d_subjects.id = stud_grades.id_subject;');
+
+        $selection_coll = collect($selection);
+        $stud = $selection_coll->whereIn('subject',$show_subj);
+        $answer = 0;
+        return json_encode([$stud,$answer]);
+    }
+
+    public function DeleteStud(Request $del_req_stud){
+        $del_stud = $del_req_stud-> input('student');
+        $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
+        DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
+        DB::table('stud_grades')->where('id_student', '=', $value)->delete();
+    }
 }
