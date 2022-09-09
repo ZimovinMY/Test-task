@@ -249,12 +249,15 @@ class MainController extends Controller
         $selection = DB::select('SELECT
             i_d_stud_models.name,
             stud_grades.grade,
-            i_d_subjects.subject
+            i_d_subjects.subject,
+            stud_grades.KM_num,
+            i_d_stud_models.id
         FROM i_d_stud_models
         JOIN stud_grades
         ON i_d_stud_models.id = stud_grades.id_student
         JOIN i_d_subjects
-        ON i_d_subjects.id = stud_grades.id_subject;');
+        ON i_d_subjects.id = stud_grades.id_subject
+        ORDER BY i_d_stud_models.id, stud_grades.KM_num;');
 
         $selection_coll = collect($selection);
         $stud = $selection_coll->whereIn('subject',$show_subj);

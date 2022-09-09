@@ -116,13 +116,18 @@
                     selected: [],
                     headers: [
                         {
-                            text: 'ФИО студента',
+                            text: 'ID Студента',
                             align: 'start',
-                            value: 'name',
+                            value: 'id',
                         },
+                        { text: 'ФИО студента', value: 'name' },
                         { text: 'Предмет', value: 'subject' },
-                        { text: 'Оценка', value: 'grade' },
+                        { text: 'КМ1', value: 'km1' },
+                        { text: 'КМ2', value: 'km2' },
+                        { text: 'КМ3', value: 'km3' },
+                        { text: 'КМ4', value: 'km4' },
                     ],
+                    students_: [],
                     students: [],
                     subject:'',
                     no_exist_subject: false,
@@ -135,6 +140,52 @@
                 }
             },
             methods:{
+                Students_fill(){
+                    let this_ = this
+                    this.students=[]
+
+                    let id_stud=this.students_[0].id
+                    let row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
+                    this.students_.forEach(function fun (curVal){
+                        console.log('curVal=',curVal)
+                        console.log('id_stud=',id_stud)
+                        if(curVal.id===id_stud)
+                        {
+                            console.log('зашли в if')
+                        }
+                        else{
+                            console.log('зашли в else')
+                            console.log('row =',row)
+                            this_.students.push(row)
+                            console.log('students =', this_.students)
+                            row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
+                            id_stud=curVal.id
+                            console.log(id_stud)
+                        }
+                        row['id']=curVal.id
+                        row['name']=curVal.name
+                        row['subject']=curVal.subject
+                        console.log('id=',curVal.id,id_stud)
+                        console.log('grade=',curVal.grade)
+                        console.log('KM_num=',curVal.KM_num)
+                        if(curVal.KM_num == 1){
+                            row['km1']=curVal.grade
+                        }
+                        else if(curVal.KM_num == 2){
+                            row['km2']=curVal.grade
+                        }
+                        else if(curVal.KM_num == 3){
+                            row['km3']=curVal.grade
+                        }
+                        else if(curVal.KM_num == 4){
+                            row['km4']=curVal.grade
+                        }
+                        console.log('row в конце foreach =', row)
+
+                    })
+                    this_.students.push(row)
+                    console.log('students = ',this.students)
+                },
                 SendSubject(){
                     let data = new FormData()
                     data.append('subject',this.subject)
@@ -160,9 +211,10 @@
                                 }
                                 if(data[1]==0){
                                     array = Object.values(data[0])
-                                    this.students = array
+                                    this.students_ = array
                                     this.show_alert_subj = false
                                     this.show_alert_stud = false
+                                    this.Students_fill()
                                 }
                             })
                 },
