@@ -63,184 +63,210 @@
                                 v-model="show_alert_stud">
                                 Нет студентов, изучающих данную дисциплину!
                             </v-alert>
-                            <v-text-field
+
+
+                            <v-autocomplete
                                 solo
                                 label="Введите название дисциплины"
                                 v-model = "subject"
-                                :rules="subject_rules"
-                                :counter="40"
-                                required>
-                            </v-text-field>
-                            <v-btn
-                                @click="SendSubject">
-                                Показать
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-                <br>
-                <v-data-table
-                    v-model="selected"
-                    :headers="headers"
-                    :items="students"
-                    :single-select= true
-                    item-key="name"
-                    show-select
-                    class="elevation-1">
-                    <template v-slot:top>
-                        <v-col>
-                        <v-btn
-                            @click="DeleteStudents"
-                            small>
-                            Удалить выбранное
-                        </v-btn>
-                        </v-col>
-                    </template>
-                </v-data-table>
-            </v-main>
-        </v-app>
-    </div>
+                                :items="selection_subjects"
+                                required
+                                clearable>
+                                <!--
+                                item-text="subject"
+                                @change="SendSubject()"-->
+                            </v-autocomplete>
+                            <!-- <v-text-field
+                                 solo
+                                 label="Введите название дисциплины"
+                                 v-model = "subject"
+                                 :rules="subject_rules"
+                                 :counter="40"
+                                 required
+                                 clearable>
+                             </v-text-field> -->
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-    <script>
-        new Vue({
-            el: '#ShowStudents',
-            vuetify: new Vuetify(),
-            data(){
-                return{
-                    show_alert_subj: false,
-                    show_alert_stud: false,
-                    selected: [],
-                    headers: [
-                        {
-                            text: 'ID Студента',
-                            align: 'start',
-                            value: 'id',
-                        },
-                        { text: 'ФИО студента', value: 'name' },
-                        { text: 'Предмет', value: 'subject' },
-                        { text: 'КМ1', value: 'km1' },
-                        { text: 'КМ2', value: 'km2' },
-                        { text: 'КМ3', value: 'km3' },
-                        { text: 'КМ4', value: 'km4' },
-                    ],
-                    students_: [],
-                    students: [],
-                    subject:'',
-                    no_exist_subject: false,
-                    no_exist_student: false,
-                    valid: false,
-                    subject_rules: [
-                        v => !!v || 'Дисциплина не должна быть пустой',
-                        v => v.length <= 40 || 'Дисциплина не должна быть длиннее 40 символов',
-                    ],
-                }
-            },
-            methods:{
-                Students_fill(){
-                    let this_ = this
-                    this.students=[]
 
-                    let id_stud=this.students_[0].id
-                    let row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
-                    this.students_.forEach(function fun (curVal){
-                        console.log('curVal=',curVal)
-                        console.log('id_stud=',id_stud)
-                        if(curVal.id===id_stud)
-                        {
-                            console.log('зашли в if')
-                        }
-                        else{
-                            console.log('зашли в else')
-                            console.log('row =',row)
-                            this_.students.push(row)
-                            console.log('students =', this_.students)
-                            row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
-                            id_stud=curVal.id
-                            console.log(id_stud)
-                        }
-                        row['id']=curVal.id
-                        row['name']=curVal.name
-                        row['subject']=curVal.subject
-                        console.log('id=',curVal.id,id_stud)
-                        console.log('grade=',curVal.grade)
-                        console.log('KM_num=',curVal.KM_num)
-                        if(curVal.KM_num == 1){
-                            row['km1']=curVal.grade
-                        }
-                        else if(curVal.KM_num == 2){
-                            row['km2']=curVal.grade
-                        }
-                        else if(curVal.KM_num == 3){
-                            row['km3']=curVal.grade
-                        }
-                        else if(curVal.KM_num == 4){
-                            row['km4']=curVal.grade
-                        }
-                        console.log('row в конце foreach =', row)
 
-                    })
-                    this_.students.push(row)
-                    console.log('students = ',this.students)
-                },
-                SendSubject(){
-                    let data = new FormData()
-                    data.append('subject',this.subject)
 
-                    fetch('ShowTable',{
-                        method: 'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        body: data
-                    })
+                             <v-btn
+                                 @click="SendSubject">
+                                 Показать
+                             </v-btn>
+                         </v-col>
+                     </v-row>
+                 </v-form>
+                 <br>
+                 <v-data-table
+                     v-model="selected"
+                     :headers="headers"
+                     :items="students"
+                     :single-select= true
+                     item-key="name"
+                     show-select
+                     class="elevation-1">
+                     <template v-slot:top>
+                         <v-col>
+                         <v-btn
+                             @click="DeleteStudents"
+                             small>
+                             Удалить выбранное
+                         </v-btn>
+                         </v-col>
+                     </template>
+                 </v-data-table>
+             </v-main>
+         </v-app>
+     </div>
 
-                        .then((response)=>{
-                            return response.json()
-                        })
-                            .then((data)=>{
-                                if(data[1]==1){
-                                    this.no_exist_subject = true
-                                    this.show_alert_subj = true
-                                }
-                                if(data[1]==2){
-                                    this.no_exist_student = true
-                                    this.students = []
-                                    this.show_alert_stud = true
-                                }
-                                if(data[1]==0){
-                                    array = Object.values(data[0])
-                                    this.students_ = array
-                                    this.show_alert_subj = false
-                                    this.show_alert_stud = false
-                                    this.Students_fill()
-                                }
-                            })
-                },
-                DeleteStudents(){
-                    let data = new FormData()
-                    let result = this.selected.map(({ name }) => name);
-                    names = result[0]
-                    console.log(names)
-                    data.append('FIO',names)
-                    fetch('SendDeleteFIO',{
-                        method:'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        body:data
-                    })
-                        .then((response)=>{
-                            return response.json()
-                        })
-                            .then((data)=>{
-                                if(data){
-                                    this.SendSubject();
-                                }
-                            })
-                },
-            }
-        })
-    </script>
+     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+     <script>
+         new Vue({
+             el: '#ShowStudents',
+             vuetify: new Vuetify(),
+             data(){
+                 return{
+                     show_alert_subj: false,
+                     show_alert_stud: false,
+                     selection_subjects: [],
+                     selected: [],
+                     headers: [
+                         {
+                             text: 'ID Студента',
+                             align: 'start',
+                             value: 'id',
+                         },
+                         { text: 'ФИО студента', value: 'name' },
+                         { text: 'Предмет', value: 'subject' },
+                         { text: 'КМ1', value: 'km1' },
+                         { text: 'КМ2', value: 'km2' },
+                         { text: 'КМ3', value: 'km3' },
+                         { text: 'КМ4', value: 'km4' },
+                     ],
+                     students_: [],
+                     students: [],
+                     subject:'',
+                     no_exist_subject: false,
+                     no_exist_student: false,
+                     valid: false,
+                     subject_rules: [
+                         v => !!v || 'Дисциплина не должна быть пустой',
+                         v => v.length <= 40 || 'Дисциплина не должна быть длиннее 40 символов',
+                     ],
+                 }
+             },
+             methods:{
+                 Students_fill(){
+                     let this_ = this
+                     this.students=[]
+
+                     let id_stud=this.students_[0].id
+                     let row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
+                     this.students_.forEach(function fun (curVal){
+                         if(curVal.id===id_stud)
+                         {
+                             //
+                         }
+                         else{
+                             this_.students.push(row)
+                             row={id: '', name: '',subject:'', km1: '0' ,km2: '0' ,km3: '0', km4: '0'}
+                             id_stud=curVal.id
+                         }
+                         row['id']=curVal.id
+                         row['name']=curVal.name
+                         row['subject']=curVal.subject
+                         if(curVal.KM_num == 1){
+                             row['km1']=curVal.grade
+                         }
+                         else if(curVal.KM_num == 2){
+                             row['km2']=curVal.grade
+                         }
+                         else if(curVal.KM_num == 3){
+                             row['km3']=curVal.grade
+                         }
+                         else if(curVal.KM_num == 4){
+                             row['km4']=curVal.grade
+                         }
+
+                     })
+                     this_.students.push(row)
+                     console.log(this.students)
+                 },
+                 SendSubject(){
+                     let data = new FormData()
+                     data.append('subject',this.subject)
+
+                     fetch('ShowTable',{
+                         method: 'POST',
+                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                         body: data
+                     })
+
+                         .then((response)=>{
+                             return response.json()
+                         })
+                             .then((data)=>{
+                                 if(data[1]==1){
+                                     this.no_exist_subject = true
+                                     this.show_alert_subj = true
+                                 }
+                                 if(data[1]==2){
+                                     this.no_exist_student = true
+                                     this.students = []
+                                     this.show_alert_stud = true
+                                 }
+                                 if(data[1]==0){
+                                     array = Object.values(data[0])
+                                     this.students_ = array
+                                     this.show_alert_subj = false
+                                     this.show_alert_stud = false
+                                     this.Students_fill()
+                                 }
+                             })
+                 },
+                 DeleteStudents(){
+                     let data = new FormData()
+                     let result = this.selected.map(({ name }) => name);
+                     names = result[0]
+                     console.log(names)
+                     data.append('FIO',names)
+                     fetch('SendDeleteFIO',{
+                         method:'POST',
+                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                         body:data
+                     })
+                         .then((response)=>{
+                             return response.json()
+                         })
+                             .then((data)=>{
+                                 if(data){
+                                     this.SendSubject();
+                                 }
+                             })
+                 },
+                 ShowSelectionSubjects(){
+                     let data = new FormData()
+                     fetch('GetTableSubjects',{
+                         method:'GET',
+                         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                     })
+                         .then((response)=>{
+                             return response.json()
+                         })
+                         .then((data)=>{
+                             this.selection_subjects = data.map(({ subject }) => subject)
+                         })
+                 },
+             },
+             mounted: function (){
+                 this.ShowSelectionSubjects();
+             }
+         })
+     </script>
 
 @endsection
 

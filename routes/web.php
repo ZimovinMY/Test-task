@@ -39,6 +39,9 @@ Route::post('/SendDeleteFIO', 'MainController@SendDeleteFIO', 'SendDeleteFIO');
 Route::get('/DeleteSubject', 'MainController@DeleteSubject');
 Route::post('/DeleteSubject/check', 'MainController@DeleteSubject_check');
 
+////
+Route::get('/GetTableSubjects', 'MainController@GetTableSubjects','GetTableSubjects');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

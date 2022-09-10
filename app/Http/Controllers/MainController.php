@@ -148,6 +148,7 @@ class MainController extends Controller
         }
     }
 
+
     public function DeleteStudent() {
         return view('DeleteStudent',['no_exist_student_delete' => false]);
     }
@@ -230,7 +231,29 @@ class MainController extends Controller
         }
     }
 
-    public function ShowTable(Request $show_request) {
+    /*public function ShowTable(Request $show_request) {
+
+        $show_subj = $show_request->input('subject');
+        $selection = DB::select('SELECT
+            i_d_stud_models.name,
+            stud_grades.grade,
+            i_d_subjects.subject,
+            stud_grades.KM_num,
+            i_d_stud_models.id
+        FROM i_d_stud_models
+        JOIN stud_grades
+        ON i_d_stud_models.id = stud_grades.id_student
+        JOIN i_d_subjects
+        ON i_d_subjects.id = stud_grades.id_subject
+        ORDER BY i_d_stud_models.id, stud_grades.KM_num;');
+
+        $selection_coll = collect($selection);
+        $stud = $selection_coll->whereIn('subject',$show_subj);
+        return json_encode($stud);
+    }
+*/
+
+     public function ShowTable(Request $show_request) {
 
         $show_subj = $show_request->input('subject');
 
@@ -265,10 +288,16 @@ class MainController extends Controller
         return json_encode([$stud,$answer]);
     }
 
+
     public function DeleteStud(Request $del_req_stud){
         $del_stud = $del_req_stud-> input('student');
         $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
         DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
         DB::table('stud_grades')->where('id_student', '=', $value)->delete();
+    }
+
+    public function GetTableSubjects(){
+        $subjects = DB::table('i_d_subjects')->get();
+        return json_encode($subjects);
     }
 }
