@@ -47,6 +47,7 @@
                 <v-form v-model="valid">
                     <v-row>
                         <v-col sm="4">
+                            <h4 class="text-primary">Выбор предмета</h4>
                             <v-alert
                                 :value="no_exist_subject"
                                 color="red"
@@ -66,16 +67,18 @@
 
 
                             <v-autocomplete
+                                no-data-text="Нет предметов для выбора"
                                 solo
-                                label="Введите название дисциплины"
+                                label="Выберите название дисциплины"
                                 v-model = "subject"
-                                :items="selection_subjects"
+                                :items = "selection_subjects"
                                 required
                                 clearable>
                                 <!--
                                 item-text="subject"
                                 @change="SendSubject()"-->
                             </v-autocomplete>
+
                             <!-- <v-text-field
                                  solo
                                  label="Введите название дисциплины"
@@ -86,14 +89,26 @@
                                  clearable>
                              </v-text-field> -->
 
-
-
-
-
                              <v-btn
                                  @click="SendSubject">
                                  Показать
                              </v-btn>
+                            <br>
+                            <br>
+                            <h4 class="text-primary">Выбор студента из таблицы</h4>
+                            <v-autocomplete
+                                no-data-text="Нет студентов для выбора"
+                                solo
+                                label="Выберите ФИО студента"
+                                v-model = "FIO"
+                                :items = "selection_students"
+                                required
+                                clearable>
+                            </v-autocomplete>
+                            <v-btn
+                                @click="SendFIO">
+                                Отсортировать
+                            </v-btn>
                          </v-col>
                      </v-row>
                  </v-form>
@@ -101,9 +116,8 @@
                  <v-data-table
                      v-model="selected"
                      :headers="headers"
-                     :items="students"
+                     :items="show_students"
                      :single-select= true
-                     item-key="name"
                      show-select
                      class="elevation-1">
                      <template v-slot:top>
@@ -133,6 +147,7 @@
                      show_alert_subj: false,
                      show_alert_stud: false,
                      selection_subjects: [],
+                     selection_students: [],
                      selected: [],
                      headers: [
                          {
@@ -149,7 +164,9 @@
                      ],
                      students_: [],
                      students: [],
+                     show_students: [],
                      subject:'',
+                     FIO:'',
                      no_exist_subject: false,
                      no_exist_student: false,
                      valid: false,
@@ -194,7 +211,8 @@
 
                      })
                      this_.students.push(row)
-                     console.log(this.students)
+                     this.show_students = this_.students
+                     this.ShowSelectionStudents()
                  },
                  SendSubject(){
                      let data = new FormData()
@@ -228,11 +246,18 @@
                                  }
                              })
                  },
+                 SendFIO(){
+                     if ((this.FIO == '') || (this.FIO == null)) {
+                         this.show_students = this.students
+                     }
+                     else{
+                         this.show_students = this.students.filter(student => student.name == this.FIO)
+                     }
+                 },
                  DeleteStudents(){
                      let data = new FormData()
                      let result = this.selected.map(({ name }) => name);
                      names = result[0]
-                     console.log(names)
                      data.append('FIO',names)
                      fetch('SendDeleteFIO',{
                          method:'POST',
@@ -261,9 +286,14 @@
                              this.selection_subjects = data.map(({ subject }) => subject)
                          })
                  },
+                 ShowSelectionStudents(){
+                     this.selection_students = this.students.map(({ name }) => name)
+
+                 }
              },
              mounted: function (){
                  this.ShowSelectionSubjects();
+                 this.ShowSelectionStudents();
              }
          })
      </script>
