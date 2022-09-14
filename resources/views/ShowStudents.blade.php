@@ -11,7 +11,7 @@
                 <v-form v-model="valid">
                     <v-row>
                         <v-col sm="4">
-                            <h4 class="text-primary">Выбор предмета</h4>
+                            <h5 class="text-primary">Выбор дисциплины</h5>
                             <v-alert
                                 :value="no_exist_subject"
                                 color="red"
@@ -36,19 +36,17 @@
                                 label="Выберите название дисциплины"
                                 v-model = "subject"
                                 :items = "selection_subjects"
-                                required
                                 clearable
                                 @change="SendSubject">
                             </v-autocomplete>
                             <br>
-                            <h4 class="text-primary">Выбор студента из таблицы</h4>
+                            <h5 class="text-primary">Выбор студента из таблицы</h5>
                             <v-autocomplete
                                 no-data-text="Нет студентов для выбора"
                                 solo
                                 label="Выберите ФИО студента"
                                 v-model = "FIO"
                                 :items = "selection_students"
-                                required
                                 clearable
                                 @change="SendFIO">
                             </v-autocomplete>

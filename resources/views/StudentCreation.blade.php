@@ -93,19 +93,20 @@
             },
             methods:{
                 SendFIO(){
-                    let data = new FormData()
-                    data.append('FIO',this.FIO)
-                    data.append('year',this.year)
+                    if (this.FIO && this.year && this.FIO.length <= 40 && this.year.length <= 5){
+                        let data = new FormData()
+                        data.append('FIO',this.FIO)
+                        data.append('year',this.year)
 
-                    fetch('SendCreationFIO',{
-                        method: 'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        body: data
-                    })
-
-                        .then((response)=>{
-                            return response.json()
+                        fetch('SendCreationFIO',{
+                            method: 'POST',
+                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                            body: data
                         })
+
+                            .then((response)=>{
+                                return response.json()
+                            })
                             .then((data)=>{
                                 if(data){
                                     window.location.replace("/")
@@ -114,6 +115,7 @@
                                     this.exist_student = true
                                 }
                             })
+                    }
                 },
             }
         })

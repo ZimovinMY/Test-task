@@ -22,7 +22,7 @@ Route::post('/SendCreationFIO', 'MainController@SendCreationFIO', 'SendCreationF
 Route::get('/SubjectCreation', 'MainController@SubjectCreation');
 Route::post('/SubjectCreation/check', 'MainController@SubjectCreation_check');
 Route::get('/BindingStudent', 'MainController@BindingStudent');
-Route::post('/BindingStudent/check', 'MainController@BindingStudent_check');
+
 Route::post('/BindingStudToSubj', 'MainController@BindingStudToSubj', 'BindingStudToSubj');
 
 Route::get('/ShowStudents', 'MainController@ShowStudents');
@@ -31,6 +31,7 @@ Route::post('/ShowTable', 'MainController@ShowTable','ShowTable');
 
 Route::get('/GradingStudent', 'MainController@GradingStudent');
 Route::post('/GradingStudent/check', 'MainController@GradingStudent_check');
+Route::post('/GradingStud', 'MainController@GradingStud','GradingStud');
 
 Route::get('/DeleteStudent', 'MainController@DeleteStudent');
 Route::post('/DeleteStudent/check', 'MainController@DeleteStudent_check');

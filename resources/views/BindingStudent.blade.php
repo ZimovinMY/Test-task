@@ -3,35 +3,6 @@
 @section('title')Привязка студента к дисциплине@endsection
 
 @section('content')
-    <h4 style="margin-left: 15px" class="text-primary"><p>Форма привязки студента к дисциплине</p></h4>
-
-    @if($errors->any())
-        <div style="width: 400px; padding-left: 10px;" class="alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{$error}}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if($no_stud_binding)
-        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
-            <h5>Данный студент не найден!</h5>
-        </div>
-    @endif
-
-    @if($no_subj_binding)
-        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
-            <h5>Данная дисциплина не найдена!</h5>
-        </div>
-    @endif
-
-    @if($exist_binding)
-        <div style="width: 400px; padding-left: 20px;" class="alert alert-warning">
-            <h5>Данная запись уже существует!</h5>
-        </div>
-    @endif
 
     <form method="post" action="/BindingStudent/check">
         @csrf
@@ -39,13 +10,13 @@
         <input style="width: 400px; padding-left: 10px;" type="text" name="student" id="student" placeholder="Введите ФИО студента" class="form-control"><br>
         <button style="width: 100px" type="submit" class="btn btn-primary">Добавить</button>
     </form>
-
-
+    <br>
 
     <div id="BindingStudent">
         <v-app>
             <v-main>
                 <v-form v-model="valid">
+                    <h4 style="margin-left: 15px" class="text-primary"><p>Форма привязки студента к дисциплине</p></h4>
                     <v-row>
                         <v-col sm="4">
                             <v-alert
@@ -129,35 +100,37 @@
             },
             methods:{
                 StudBinding(){
-                    let data = new FormData()
-                    data.append('FIO',this.FIO)
-                    data.append('subject',this.subject)
-                    fetch('BindingStudToSubj',{
-                        method: 'POST',
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        body: data
-                    })
+                    if (this.FIO && this.subject && this.FIO.length <= 40 && this.subject.length <= 40){
+                        let data = new FormData()
+                        data.append('FIO',this.FIO)
+                        data.append('subject',this.subject)
+                        fetch('BindingStudToSubj',{
+                            method: 'POST',
+                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                            body: data
+                        })
 
-                        .then((response)=>{
-                            return response.json()
-                        })
-                        .then((data)=>{
-                            if(data==1){
-                                this.no_subj_binding = true
-                                this.show_alert_no_subj = true
-                            }
-                            if(data==2){
-                                this.no_stud_binding = true
-                                this.show_alert_no_stud = true
-                            }
-                            if(data==3){
-                                this.having_binding = true
-                                this.show_alert_having_binding = true
-                            }
-                            if(data==0){
-                                window.location.replace("/")
-                            }
-                        })
+                            .then((response)=>{
+                                return response.json()
+                            })
+                            .then((data)=>{
+                                if(data==1){
+                                    this.no_subj_binding = true
+                                    this.show_alert_no_subj = true
+                                }
+                                if(data==2){
+                                    this.no_stud_binding = true
+                                    this.show_alert_no_stud = true
+                                }
+                                if(data==3){
+                                    this.having_binding = true
+                                    this.show_alert_having_binding = true
+                                }
+                                if(data==0){
+                                    window.location.replace("/")
+                                }
+                            })
+                    }
                 }
             }
         })

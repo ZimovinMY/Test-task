@@ -38,7 +38,9 @@
                             <v-alert
                                 :value="no_exist_student"
                                 color="red"
-                                type="error">
+                                type="error"
+                                dismissible
+                                v-model="show_alert_no_student">
                                 Данный студент не найден!
                             </v-alert>
                             <v-text-field
@@ -50,9 +52,44 @@
                                 required>
                             </v-text-field>
                             <v-btn
-                                @click="SendFIO">
+                                @click.stop = "check_rules">
+                                <!-- @click.stop="confirm_delete = true" -->
                                 Удалить
                             </v-btn>
+                            <v-dialog
+                                v-model="confirm_delete"
+                                max-width="500"
+                            >
+                                <v-card>
+                                    <v-card-title class="text-h5">
+                                        Подтвердите удаление
+                                    </v-card-title>
+
+                                    <v-card-text>
+                                        Вся информация связанная с данным студентом будет удалена. Вы действительно хотите удалить данного студента?
+                                    </v-card-text>
+
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+
+                                        <v-btn
+                                            color="red darken-1"
+                                            text
+                                            @click="confirm_delete = false"
+                                        >
+                                            Отмена
+                                        </v-btn>
+
+                                        <v-btn
+                                            color="green darken-1"
+                                            text
+                                            @click="confirm_delete = false;SendFIO()"
+                                        >
+                                            Удалить
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -69,8 +106,10 @@
             vuetify: new Vuetify(),
             data(){
                 return{
+                    confirm_delete: false,
                     FIO:'',
                     no_exist_student: false,
+                    show_alert_no_student: false,
                     valid: false,
                     FIO_rules: [
                         v => !!v || 'ФИО не должно быть пустым',
@@ -91,15 +130,23 @@
                         .then((response)=>{
                             return response.json()
                         })
-                            .then((data)=>{
-                                if(data){
-                                    window.location.replace("/")
-                                }
-                                else{
-                                    this.no_exist_student = true
-
-                                }
-                            })
+                        .then((data)=>{
+                            if(data){
+                                window.location.replace("/")
+                            }
+                            else{
+                                this.no_exist_student = true
+                                this.show_alert_no_student = true
+                            }
+                        })
+                },
+                check_rules(){
+                    if (this.FIO && this.FIO.length <= 40){
+                        this.confirm_delete = true
+                    }
+                    else {
+                        this.confirm_delete = false
+                    }
                 },
             }
         })

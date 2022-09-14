@@ -59,38 +59,11 @@ class MainController extends Controller
     }
 
     public function BindingStudent() {
-        return view('BindingStudent', ['exist_binding' => false,'no_stud_binding' => false,'no_subj_binding' => false]);
-    }
-
-    public function BindingStudent_check(Request $bind_request) {
-        $valid = $bind_request->validate([
-            'subject' => 'required|min:4|max:50',
-            'student' => 'required|min:4|max:50'
-        ]);
-
-        $bind_subj = $bind_request-> input('subject');
-        $bind_stud = $bind_request-> input('student');
-
-        $id_subj=DB::table('i_d_subjects')->where('subject', $bind_subj)->value('id');
-        if($id_subj === null){
-            return view('BindingStudent', ['exist_binding' => false,'no_stud_binding' => false,'no_subj_binding' => true]);
-        }
-        $id_stud=DB::table('i_d_stud_models')->where('name', $bind_stud)->value('id');
-        if($id_stud === null){
-            return view('BindingStudent', ['exist_binding' => false,'no_stud_binding' => true,'no_subj_binding' => false]);
-        }
-        $value = DB::table('stud_grades')->where('id_student', $id_stud)->where('id_subject', $id_subj)->count();
-        if ($value === 0) {
-            DB::table('stud_grades')->insert(['id_student'=>$id_stud,'id_subject'=>$id_subj]);
-            return view('main');
-        }
-        else{
-            return view('BindingStudent', ['exist_binding' => true,'no_stud_binding' => false,'no_subj_binding' => false]);
-        }
+        return view('BindingStudent');
     }
 
     public function ShowStudents() {
-        return view('ShowStudents', ['students' => [], 'no_exist_subject' => false, 'no_exist_student' => false]);
+        return view('ShowStudents');
     }
 
     public function GradingStudent() {
@@ -237,28 +210,6 @@ class MainController extends Controller
         }
     }
 
-    /*public function ShowTable(Request $show_request) {
-
-        $show_subj = $show_request->input('subject');
-        $selection = DB::select('SELECT
-            i_d_stud_models.name,
-            stud_grades.grade,
-            i_d_subjects.subject,
-            stud_grades.KM_num,
-            i_d_stud_models.id
-        FROM i_d_stud_models
-        JOIN stud_grades
-        ON i_d_stud_models.id = stud_grades.id_student
-        JOIN i_d_subjects
-        ON i_d_subjects.id = stud_grades.id_subject
-        ORDER BY i_d_stud_models.id, stud_grades.KM_num;');
-
-        $selection_coll = collect($selection);
-        $stud = $selection_coll->whereIn('subject',$show_subj);
-        return json_encode($stud);
-    }
-*/
-
      public function ShowTable(Request $show_request) {
 
         $show_subj = $show_request->input('subject');
@@ -292,6 +243,35 @@ class MainController extends Controller
         $stud = $selection_coll->whereIn('subject',$show_subj);
         $answer = 0;
         return json_encode([$stud,$answer]);
+    }
+
+    public function GradingStud(Request $grade_request)
+    {
+        $grade_stud = $grade_request-> input('FIO');
+        $grade_subj = $grade_request-> input('subject');
+        $grade_KM_num = $grade_request-> input('KM_num');
+        $grade_grade = $grade_request-> input('grade');
+
+        $id_stud = DB::table('i_d_stud_models')->where('name', $grade_stud)->value('id');
+        if ($id_stud === null) {
+            $answer = 1;
+            return json_encode($answer);
+        }
+        $id_subj = DB::table('i_d_subjects')->where('subject', $grade_subj)->value('id');
+        if ($id_subj === null) {
+            $answer = 2;
+            return json_encode($answer);
+        }
+        $value = DB::table('stud_grades')->where('id_subject', $id_subj)->where('id_student', $id_stud)->count();
+        if($value === 0) {
+            $answer = 3;
+            return json_encode($answer);
+        }
+        else{
+            DB::table('stud_grades')->where('id_subject', $id_subj)->where('id_student', $id_stud)->where('KM_num', $grade_KM_num)->update(['grade' => $grade_grade]);
+            $answer = 0;
+            return json_encode($answer);
+        }
     }
 
 
