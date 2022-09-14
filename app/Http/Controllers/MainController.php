@@ -93,29 +93,6 @@ class MainController extends Controller
         return view('ShowStudents', ['students' => [], 'no_exist_subject' => false, 'no_exist_student' => false]);
     }
 
-    public function ShowStudents_check(Request $show_request) {
-        $valid = $show_request->validate([
-            'subject' => 'required|min:4|max:50'
-        ]);
-
-        $show_subj = $show_request->input('subject');
-
-        $id_subj = DB::table('i_d_subjects')->where('subject', $show_subj)->value('id');
-        if ($id_subj === null) {
-            return view('ShowStudents', ['students' => [], 'no_exist_subject' => true, 'no_exist_student' => false]);
-        }
-        $id_stud_count = DB::table('stud_grades')->where('id_subject', $id_subj)->count();
-        if ($id_stud_count === 0) {
-            return view('ShowStudents', ['students' => [], 'no_exist_subject' => false, 'no_exist_student' => true]);
-        }
-        $id_stud = DB::table('stud_grades')->where('id_subject', $id_subj)->get();
-        $data_array = $id_stud->toArray();
-        $id_stud_array = array_column($data_array, 'id_student');
-        $stud_name = DB::table('i_d_stud_models')->whereIn('id', $id_stud_array)->get();
-        return view('ShowStudents', ['students' => $stud_name, 'no_exist_subject' => false, 'no_exist_student' => false]);
-    }
-
-
     public function GradingStudent() {
         return view('GradingStudent',['no_conn_grade' => false, 'no_exist_subject' => false, 'no_exist_student' => false]);
     }
@@ -227,6 +204,35 @@ class MainController extends Controller
             DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
             DB::table('stud_grades')->where('id_student', '=', $value)->delete();
             $answer = 1;
+            return json_encode($answer);
+        }
+    }
+
+    public function BindingStudToSubj(Request $request_binding)
+    {
+        $stud_bind = $request_binding->input('FIO');
+        $subj_bind = $request_binding->input('subject');
+
+        $id_subj = DB::table('i_d_subjects')->where('subject', $subj_bind)->value('id');
+        if($id_subj === null){
+            $answer = 1;
+            return json_encode($answer);
+        }
+        $id_stud = DB::table('i_d_stud_models')->where('name', $stud_bind)->value('id');
+        if($id_stud === null){
+            $answer = 2;
+            return json_encode($answer);
+        }
+        $value = DB::table('stud_grades')->where('id_student', $id_stud)->where('id_subject', $id_subj)->count();
+        if ($value === 0) {
+            for ($KM_num = 1; $KM_num <5; $KM_num++){
+                DB::table('stud_grades')->insert(['id_student'=>$id_stud,'id_subject'=>$id_subj,'KM_num'=>$KM_num]);
+            }
+            $answer = 0;
+            return json_encode($answer);
+        }
+        else{
+            $answer = 3;
             return json_encode($answer);
         }
     }
