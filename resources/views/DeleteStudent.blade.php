@@ -53,7 +53,6 @@
                             </v-text-field>
                             <v-btn
                                 @click.stop = "check_rules">
-                                <!-- @click.stop="confirm_delete = true" -->
                                 Удалить
                             </v-btn>
                             <v-dialog

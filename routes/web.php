@@ -36,13 +36,16 @@ Route::post('/GradingStud', 'MainController@GradingStud','GradingStud');
 Route::get('/DeleteStudent', 'MainController@DeleteStudent');
 Route::post('/DeleteStudent/check', 'MainController@DeleteStudent_check');
 
-Route::post('/SendDeleteFIO', 'MainController@SendDeleteFIO', 'SendDeleteFIO');
+Route::post('/SendDeleteID', 'MainController@SendDeleteID', 'SendDeleteID');
 
 Route::get('/DeleteSubject', 'MainController@DeleteSubject');
 Route::post('/DeleteSubject/check', 'MainController@DeleteSubject_check');
 
 
 Route::get('/GetTableSubjects', 'MainController@GetTableSubjects','GetTableSubjects');
+
+Route::post('/DeleteString', 'MainController@DeleteString','DeleteString');
+Route::post('/ChangeString', 'MainController@ChangeString','ChangeString');
 
 Auth::routes();
 

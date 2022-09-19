@@ -164,18 +164,18 @@ class MainController extends Controller
         }
     }
 
-    public function SendDeleteFIO(Request $del_req_stud)
+    public function SendDeleteID(Request $del_req_stud)
     {
-        $del_stud = $del_req_stud-> input('FIO');
+        $del_id = $del_req_stud-> input('id_student');
 
-        $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
+        $value = DB::table('i_d_stud_models')->where('id', $del_id)->value('id');
         if ($value === null) {
             $answer = 0;
             return json_encode($answer);
         }
         else{
-            DB::table('i_d_stud_models')->where('name', '=', $del_stud)->delete();
-            DB::table('stud_grades')->where('id_student', '=', $value)->delete();
+            DB::table('i_d_stud_models')->where('id', '=', $del_id)->delete();
+            DB::table('stud_grades')->where('id_student', '=', $del_id)->delete();
             $answer = 1;
             return json_encode($answer);
         }
@@ -231,7 +231,8 @@ class MainController extends Controller
             stud_grades.grade,
             i_d_subjects.subject,
             stud_grades.KM_num,
-            i_d_stud_models.id
+            stud_grades.id_student,
+            stud_grades.id_subject
         FROM i_d_stud_models
         JOIN stud_grades
         ON i_d_stud_models.id = stud_grades.id_student
@@ -274,7 +275,6 @@ class MainController extends Controller
         }
     }
 
-
     public function DeleteStud(Request $del_req_stud){
         $del_stud = $del_req_stud-> input('student');
         $value = DB::table('i_d_stud_models')->where('name', $del_stud)->value('id');
@@ -286,4 +286,26 @@ class MainController extends Controller
         $subjects = DB::table('i_d_subjects')->get();
         return json_encode($subjects);
     }
+
+    public function DeleteString(Request $del_req){
+        $del_id_stud = $del_req -> input('id_student');
+        $del_id_subj = $del_req -> input('id_subject');
+        $del_count=DB::table('stud_grades')->where('id_student', '=', $del_id_stud)->where('id_subject', '=', $del_id_subj)->delete();
+        return json_encode($del_count);
+    }
+
+    public function ChangeString(Request $change_req){
+        $change_id_stud = $change_req -> input('id_student');
+        $change_id_subj = $change_req -> input('id_subject');
+        $KMs = $change_req -> input('KM');
+        for($step = 0; $step <= 3; $step ++){
+            DB::table('stud_grades')
+                ->where('id_student', $change_id_stud)
+                ->where('id_subject', $change_id_subj)
+                ->where('KM_num', ($step + 1))
+                ->update(['grade' => $KMs[$step]]);
+        }
+        $answer = 1;
+        return json_encode($answer);
+        }
 }
